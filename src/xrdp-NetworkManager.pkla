@@ -1,0 +1,6 @@
+[Netowrkmanager]
+Identity=unix-group:sudo
+Action=org.freedesktop.NetworkManager.network-control
+ResultAny=yes
+ResultInactive=yes
+ResultActive=yes

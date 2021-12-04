@@ -1,0 +1,6 @@
+[Netowrkmanager]
+Identity=unix-group:sudo
+Action=org.freedesktop.packagekit.system-sources-refresh
+ResultAny=yes
+ResultInactive=auth_admin
+ResultActive=yes
