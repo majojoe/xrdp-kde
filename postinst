@@ -1,4 +1,34 @@
  #!/bin/bash
 
+XRDP_CONF_FILE="/etc/xrdp/xrdp.ini"
+CERT_FILE="/etc/ssl/certs/ssl-cert-snakeoil.pem"
+
+
+# setup tls encryption
+# first param:  
+setup_tls_encryption() {
+        if [ -f "${XRDP_CONF_FILE}" ]; then
+                if grep -q "security_layer=" "$XRDP_CONF_FILE"; then
+                        sed -i "s/security_layer=.*/security_layer=tls/g" "$XRDP_CONF_FILE"
+                fi
+        fi
+                
+        local OLD_DNS_NAME
+        local CURRENT_DNS_NAME
+        OLD_DNS_NAME=$(openssl x509 -in "${CERT_FILE}" -text | grep "DNS:" | cut -d ':' -f2)
+        CURRENT_DNS_NAME=$(nslookup $(hostname) | grep "Name:" | cut -f2)
+        if [ "${OLD_DNS_NAME}" != "${CURRENT_DNS_NAME}" ]; then
+                make-ssl-cert generate-default-snakeoil --force-overwrite
+        fi
+}
+ 
+
+setup_tls_encryption
+ 
+#add user xrdp to group ssl-cert in order to be able to use 
+usermod -aG ssl-cert xrdp
+
 systemctl enable xrdp
 systemctl restart polkit
+
+

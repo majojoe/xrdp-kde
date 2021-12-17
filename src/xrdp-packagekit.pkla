@@ -1,5 +1,5 @@
 [Netowrkmanager]
-Identity=unix-group:sudo
+Identity=unix-group:sudo;unix-group:domänen-benutzer;unix-group:domain-users;unix-group:xrdp
 Action=org.freedesktop.packagekit.system-sources-refresh
 ResultAny=yes
 ResultInactive=auth_admin

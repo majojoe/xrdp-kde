@@ -1,3 +1,12 @@
 #!/bin/bash -e
 
+XRDP_CONF_FILE="/etc/xrdp/xrdp.ini"
+
 systemctl disable xrdp
+
+if [ -f "${XRDP_CONF_FILE}" ]; then
+        if grep -q "security_layer=" "$XRDP_CONF_FILE"; then
+                sed -i "s/security_layer=.*/security_layer=negotiate/g" "$XRDP_CONF_FILE"
+        fi
+fi
+                
