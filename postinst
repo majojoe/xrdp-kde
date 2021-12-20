@@ -2,6 +2,7 @@
 
 XRDP_CONF_FILE="/etc/xrdp/xrdp.ini"
 CERT_FILE="/etc/ssl/certs/ssl-cert-snakeoil.pem"
+XRDP_START_FILE="/etc/xrdp/startwm.sh"
 
 
 # setup tls encryption
@@ -21,10 +22,22 @@ setup_tls_encryption() {
                 make-ssl-cert generate-default-snakeoil --force-overwrite
         fi
 }
- 
+
+# allow multiple sessions for the same user (local and remote)
+allow_multiple_sessions() {
+        if [ -f "${XRDP_START_FILE}" ]; then
+                if ! grep -q "unset DBUS_SESSION_BUS_ADDRESS" "$XRDP_START_FILE"; then
+                        if grep -q "test -x /etc/X11/Xsession && exec /etc/X11/Xsession" "$XRDP_START_FILE"; then
+                                sed -i "/^test -x \/etc\/X11\/Xsession && exec \/etc\/X11\/Xsession.*/i #hack to be able to log in via rdp even if user is locally already signed in\nunset DBUS_SESSION_BUS_ADDRESS\nunset XDG_RUNTIME_DIR\n" "$XRDP_START_FILE"
+                        fi
+                fi
+        fi
+}
 
 setup_tls_encryption
  
+allow_multiple_sessions
+
 #add user xrdp to group ssl-cert in order to be able to use 
 usermod -aG ssl-cert xrdp
 
