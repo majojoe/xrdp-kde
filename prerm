@@ -1,8 +1,19 @@
 #!/bin/bash -e
 
 XRDP_CONF_FILE="/etc/xrdp/xrdp.ini"
+XRDP_START_FILE="/etc/xrdp/startwm.sh"
 
 systemctl disable xrdp
+
+# remove sections allowing multiple sessions for the same user (local and remote)
+remove_multiple_sessions() {
+        if [ -f "${XRDP_START_FILE}" ]; then
+                #remove matching lines
+                sed -i '/hack to be able to log in via rdp/d' ${XRDP_START_FILE}
+                sed -i '/unset XDG_RUNTIME_DIR/d' ${XRDP_START_FILE}
+                sed -i '/unset DBUS_SESSION_BUS_ADDRESS/d' ${XRDP_START_FILE}
+        fi
+}
 
 if [ -f "${XRDP_CONF_FILE}" ]; then
         if grep -q "security_layer=" "$XRDP_CONF_FILE"; then
@@ -10,3 +21,6 @@ if [ -f "${XRDP_CONF_FILE}" ]; then
         fi
 fi
                 
+                
+remove_multiple_sessions
+
