@@ -6,7 +6,7 @@ install(FILES src/xrdp-NetworkManager.pkla DESTINATION  /etc/polkit-1/localautho
 install(FILES src/xrdp-packagekit.pkla DESTINATION  /etc/polkit-1/localauthority/50-local.d/ )
 set(CPACK_PACKAGE_NAME "xrdp-kde")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "xrdp package for use under kde environment.")
-set(CPACK_PACKAGE_VERSION "1.0.1")
+set(CPACK_PACKAGE_VERSION "1.0.2")
 set(SYSTEM_ARCH "all")
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "xrdp,ssl-cert")
 set(CPACK_GENERATOR "DEB")
